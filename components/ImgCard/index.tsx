@@ -10,32 +10,33 @@ interface ICard {
   img?: any;
 }
 
-export default function ImgCard({
-  name,
-  onClick,
-  img,
-}: ICard) {
+export default function ImgCard({ name, onClick, img}: ICard) {
   const navigate = useNavigation<any>();
+
+  const handlePress = () => {
+    onClick();
+    navigate.navigate("ImgView", {
+        cardElements: {
+          name: name,
+          img: img,
+        },
+      })
+    };
 
   return (
     <TouchableOpacity
       style={styles.card}
       onPress={() =>
-        navigate.navigate("ImgView", {
-          cartElements: {
-            name: name,
-            img: img,
-          },
-        })
+        handlePress()
       }
     >
+      <Text style={[styles.cardTitle, { marginBottom: 30 }]}>{name}</Text>
       <Image
         style={styles.cardImg}
         source={{
           uri: img,
         }}
       />
-      <Text style={[styles.cardTitle, { marginTop: 30 }]}>{name}</Text>
     </TouchableOpacity>
   );
 }
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#493d8a",
     width: 390,
-    height: 400,
+    height: 300,
     borderRadius: 15,
     margin: 10,
     alignItems: "baseline",

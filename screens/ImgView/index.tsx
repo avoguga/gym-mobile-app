@@ -1,12 +1,10 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import * as ScreenOrientation from "expo-screen-orientation";
 
-export default function ImgView() {
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-
+export default function ImgView({ route, navigation }: any) {
+  
   return (
     <View style={styles.container}>
-     
+      <Image source={{ uri: route.params.cardElements.img }} style={styles.img} />
     </View>
   );
 }
@@ -21,6 +19,6 @@ const styles = StyleSheet.create({
   img: {
     width: 700,
     height: 340,
-    resizeMode: "stretch"
+    resizeMode: "stretch",
   },
 });
