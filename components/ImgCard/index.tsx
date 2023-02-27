@@ -8,29 +8,34 @@ interface ICard {
   name: String[];
   onClick?: any;
   img?: any;
+  onDelete?: any;
 }
 
-export default function ImgCard({ name, onClick, img}: ICard) {
+export default function ImgCard({ name, onClick, img, onDelete }: ICard) {
   const navigate = useNavigation<any>();
 
   const handlePress = () => {
     onClick();
     navigate.navigate("ImgView", {
-        cardElements: {
-          name: name,
-          img: img,
-        },
-      })
-    };
+      cardElements: {
+        name: name,
+        img: img,
+      },
+    });
+  };
 
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() =>
-        handlePress()
-      }
-    >
-      <Text style={[styles.cardTitle, { marginBottom: 30 }]}>{name}</Text>
+    <TouchableOpacity style={styles.card} onPress={() => handlePress()}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={[styles.cardTitle, { marginBottom: 30,  flex: 1 }]}>{name}</Text>
+        <Icon
+          name="trash"
+          type="font-awesome"
+          color="#fff"
+          onPress={() => onDelete()}
+          iconStyle={{ marginBottom: 10, marginTop: 5 }}
+        />
+      </View>
       <Image
         style={styles.cardImg}
         source={{
@@ -52,7 +57,7 @@ const styles = StyleSheet.create({
   },
   type: {},
   card: {
-    backgroundColor: "#493d8a",
+    backgroundColor: "#c90087",
     width: 390,
     height: 300,
     borderRadius: 15,

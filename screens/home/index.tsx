@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, listAll, getDownloadURL, deleteObject  } from "firebase/storage";
 import { app } from "../../firebaseConfig";
 import { useEffect, useState } from "react";
 import ImgCard from "../../components/ImgCard";
@@ -35,6 +35,17 @@ export default function HomeScreen() {
       });
   };
 
+  const handleDelete = (objectRef: any) => {
+    deleteObject(objectRef)
+      .then(() => {
+        console.log('Object deleted successfully');
+        atualizar();
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+        console.log(error);
+      });
+  };
   useEffect(() => {
     atualizar();
     console.log(orientationIsLandscape);
@@ -61,6 +72,7 @@ export default function HomeScreen() {
       name={item.name}
       img={item.img}
       onClick={() => setOrientation(true)}
+      onDelete={() => handleDelete(ref(storage, `workouts/${item.name}`))}
     />
   );
 
@@ -74,9 +86,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 60, marginRight: 180, marginTop: 30 }}>
-        Treinos
-      </Text>
+      <View style={{backgroundColor: "#c90087"}}>
+        <Text style={{ fontSize: 60, marginRight: 180, marginTop: 30 }}>
+          Treinos
+        </Text>
+      </View>
       <FlatList data={data} renderItem={renderItem} />
       <StatusBar style="auto" />
     </View>
