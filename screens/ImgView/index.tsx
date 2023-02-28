@@ -1,11 +1,21 @@
+import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 
 export default function ImgView({ route, navigation }: any) {
-  
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: route.params.cardElements.img }} style={styles.img} />
-    </View>
+    <ReactNativeZoomableView
+      maxZoom={4}
+      minZoom={1}
+      initialZoom={1}
+      bindToBorders={true}
+      style={styles.container}
+    >
+      <Image
+        source={{ uri: route.params.cardElements.img }}
+        style={styles.img}
+      />
+    </ReactNativeZoomableView>
   );
 }
 
@@ -17,8 +27,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   img: {
-    width: 700,
-    height: 340,
+    width: "100%",
+    height: "100%",
     resizeMode: "stretch",
   },
 });

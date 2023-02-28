@@ -1,11 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import { getStorage, ref, listAll, getDownloadURL, deleteObject  } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  listAll,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { app } from "../../firebaseConfig";
 import { useEffect, useState } from "react";
 import ImgCard from "../../components/ImgCard";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useNavigation } from "@react-navigation/native";
+import { Input } from "@rneui/themed";
+import { Icon } from "@rneui/base";
 
 export default function HomeScreen() {
   const navigate = useNavigation<any>();
@@ -13,6 +21,7 @@ export default function HomeScreen() {
   const [img, setImg]: any = useState();
   const [imgName, setImgName] = useState([""]);
   const [orientationIsLandscape, setOrientation] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const storage = getStorage(app);
   const storageRef = ref(storage, `workouts/`);
@@ -38,7 +47,7 @@ export default function HomeScreen() {
   const handleDelete = (objectRef: any) => {
     deleteObject(objectRef)
       .then(() => {
-        console.log('Object deleted successfully');
+        console.log("Object deleted successfully");
         atualizar();
       })
       .catch((error) => {
@@ -84,14 +93,32 @@ export default function HomeScreen() {
     return unsubscribe;
   }, [navigate]);
 
+  const filteredData = data.filter((item: any) =>
+    item.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor: "#c90087"}}>
-        <Text style={{ fontSize: 60, marginRight: 180, marginTop: 30 }}>
+      <View style={{ backgroundColor: "#c90087", width: "100%" }}>
+        <Text
+          style={{ fontSize: 60, marginTop: 30, marginLeft: 10, color: "#fff" }}
+        >
           Treinos
         </Text>
       </View>
-      <FlatList data={data} renderItem={renderItem} />
+      <Input
+        placeholder="Pesquisar treinos"
+        onChangeText={(text) => setSearchText(text)}
+        rightIcon={
+          <Icon
+            name="search"
+            type="font-awesome"
+            size={24}
+            color="black"
+          />
+        }
+      />
+      <FlatList data={filteredData} renderItem={renderItem} />
       <StatusBar style="auto" />
     </View>
   );
