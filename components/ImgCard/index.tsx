@@ -1,6 +1,12 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import React from "react";
-import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
@@ -27,14 +33,25 @@ export default function ImgCard({ name, onClick, img, onDelete }: ICard) {
   return (
     <TouchableOpacity style={styles.card} onPress={() => handlePress()}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={[styles.cardTitle, { marginBottom: 30,  flex: 1 }]}>{name}</Text>
-        <Icon
-          name="trash"
-          type="font-awesome"
-          color="#fff"
-          onPress={() => onDelete()}
-          iconStyle={{ marginBottom: 10, marginTop: 5 }}
-        />
+        <Text style={[styles.cardTitle, { marginBottom: 30, flex: 1 }]}>
+          {name}
+        </Text>
+        {Platform.OS === "web" ? (
+          <TouchableOpacity onPress={() => onDelete()}>
+            <Image
+              style={{ width: 20, height: 20, marginBottom: 10, marginTop: 5 }}
+              source={require("./icons8-trash-can-64.png")}
+            />
+          </TouchableOpacity>
+        ) : (
+          <Icon
+            name="trash"
+            type="font-awesome"
+            color="#fff"
+            onPress={() => onDelete()}
+            iconStyle={{ marginBottom: 10, marginTop: 5 }}
+          />
+        )}
       </View>
       <Image
         style={styles.cardImg}
@@ -62,7 +79,6 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 15,
     margin: 10,
-    alignItems: "baseline",
     padding: 10,
   },
   cardTitle: {

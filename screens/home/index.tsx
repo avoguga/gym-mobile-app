@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  Platform,
+} from "react-native";
 import {
   getStorage,
   ref,
@@ -14,6 +21,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { useNavigation } from "@react-navigation/native";
 import { Input } from "@rneui/themed";
 import { Icon } from "@rneui/base";
+import React from "react";
 
 export default function HomeScreen() {
   const navigate = useNavigation<any>();
@@ -57,7 +65,6 @@ export default function HomeScreen() {
   };
   useEffect(() => {
     atualizar();
-    console.log(orientationIsLandscape);
     if (orientationIsLandscape == true) {
       ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
@@ -106,18 +113,31 @@ export default function HomeScreen() {
           Treinos
         </Text>
       </View>
-      <Input
-        placeholder="Pesquisar treinos"
-        onChangeText={(text) => setSearchText(text)}
-        rightIcon={
-          <Icon
-            name="search"
-            type="font-awesome"
-            size={24}
-            color="black"
+      {Platform.OS === "web" ? (
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "90%",
+        }}>
+          <Input
+            placeholder="Pesquisar treinos"
+            onChangeText={(text) => setSearchText(text)}
           />
-        }
-      />
+          <Image
+            style={{ width: 20, height: 20, marginBottom: 10, marginTop: 5 }}
+            source={require("./icons8-search-50.png")}
+          />
+        </View>
+      ) : (
+        <Input
+          placeholder="Pesquisar treinos"
+          onChangeText={(text) => setSearchText(text)}
+          rightIcon={
+            <Icon name="search" type="font-awesome" size={24} color="black" />
+          }
+        />
+      )}
       <FlatList data={filteredData} renderItem={renderItem} />
       <StatusBar style="auto" />
     </View>
